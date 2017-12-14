@@ -1,0 +1,22 @@
+import requests
+import os
+from requests_kerberos import HTTPKerberosAuth, OPTIONAL
+import pandas as pd
+
+cert = r"C:\Users\chenfa\Documents\YardLog\cacerts.pem"
+os.environ["REQUESTS_CA_BUNDLE"] = cert
+kerberos_auth = HTTPKerberosAuth(mutual_authentication=OPTIONAL)
+r = requests.get('https://noc.corp.amazon.com/data/wtp_live.csv?', verify=cert, auth=kerberos_auth)
+data = r.text
+
+import sys
+if sys.version_info[0] < 3: 
+    from StringIO import StringIO
+else:
+    from io import StringIO
+
+data = StringIO(data)
+
+df = pd.read_csv(data, sep=",")
+df = df.loc[:,'source':'Business_Type_Filter']
+df.to_csv(r'C:\Users\chenfa\Documents\YardLog\wtp.csv', index = False )
