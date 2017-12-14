@@ -1,0 +1,153 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Nov 19 11:43:29 2017
+
+@author: chenfa
+"""
+
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+This is a temporary script file.
+"""
+import pandas as pd
+from collections import OrderedDict
+import numpy as np
+
+
+#import csv file from file 
+datasetStatic= pd.read_csv("C:\\Users\\chenfa\\Documents\\blankCheking\\all-sort-groups.csv")
+datasetCompareOrigin = pd.read_csv("C:\\Users\\chenfa\\Documents\\blankCheking\\SortGroupEditor.csv")
+#check the data
+datasetCompareOrigin.head(3)
+datasetStatic = datasetStatic.iloc[:,:2]
+datasetStatic = datasetStatic.assign(matched = pd.Series('Yes', index = datasetStatic.index).values)
+datasetCompare = datasetCompareOrigin.iloc[:,:2]
+datasetStatic.head(3)
+datasetCompare.head(3)
+
+#Get Rows is that in Static File
+
+not_in = datasetCompare.merge(datasetStatic, how = 'left', on = ['Origin','Sort Code'] )
+
+
+not_in = not_in[pd.isnull(not_in['matched'])]
+
+newIndex = datasetCompare.index.isin(not_in.index)  
+
+newData = datasetCompareOrigin[newIndex]
+
+datasetCurr = newData.iloc[:,:5]
+
+
+
+#any missing value for each column?
+summary = datasetCurr.isnull().sum()
+
+print(pd.DataFrame(summary))
+
+#get colName which has missign values 
+colName = datasetCurr.isnull().any()
+missingCol = colName[colName==True]
+
+#where to save inforamtion for missing value 
+label = []#col name
+
+missingRowDF = [] #dataframeindex
+for i in range(len(missingCol)):
+    col = missingCol.index[i]
+
+    label.append(col)
+
+    rowNumDF =(datasetCurr[datasetCurr[col].isnull()].index).tolist()
+
+    missingRowDF.append(rowNumDF)
+
+
+
+#Select Rows with Missing value
+column = list(newData.columns.values)
+missingValueDF = pd.DataFrame(columns = column)
+missingIndexDF = datasetCurr.index.isin(rowNumDF) 
+missingValueDF = newData[missingIndexDF]
+
+#autoFilling
+for i in column:
+    if i == 'Automated Planning':
+        missingValueDF.loc[:,i] = missingValueDF[i].fillna('No')
+    elif i == 'Volume unit':
+        missingValueDF.loc[:,i] = missingValueDF[i].fillna('cuft')
+    elif i == 'Cube target':
+        missingValueDF.loc[:,i] = missingValueDF[i].fillna('0')
+    elif i == 'Override cube target':
+        missingValueDF.loc[:,i] = missingValueDF[i].fillna('No')
+    elif i == 'Utilization for Departure':
+        missingValueDF.loc[:,i] = missingValueDF[i].fillna('1')
+
+missingValueDF.to_csv('C:\\Users\\chenfa\\Documents\\blankCheking\\SortGroupEditorAutoFilled.csv', index = False)
+
+#sending an email 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
+from email.utils import formatdate
+from email import encoders
+import tkinter
+import tkinter.simpledialog
+
+#Your user ID
+def get_user():    
+    tk_root = tkinter.Tk()
+    tk_root.withdraw()
+    return tkinter.simpledialog.askstring('UserName','What is your user name(your amazon email address)?')
+
+#Your password
+def get_pass():
+    tk_root = tkinter.Tk()
+    tk_root.withdraw()
+    return tkinter.simpledialog.askstring('Password','What is your amazon password?', show='*')
+
+#Who you want to send 
+def get_destination():
+    tk_root = tkinter.Tk()
+    tk_root.withdraw()
+    return tkinter.simpledialog.askstring('Destination','Who do you want to send the report to? (Full email address)')
+
+def send_mail(isTls=True):
+    send_from = get_user()
+    password = get_pass()
+
+#    send_to = get_destination()
+    #Email List for who will receive the alert 
+    send_to = ['chenfa@amazon.com','jlaub@amazon.com', 'ats-scheduling@amazon.com', 'omotayot@amazon.com']
+    msg = MIMEMultipart()
+    msg['From'] = send_from
+    msg['To'] = 'chenfa@amazon.com , jlaub@amazon.com, omotayot@amazon.com'
+    msg['Date'] = formatdate(localtime = True)
+    msg['Subject'] = 'SortGroupEditorMissingValueAlert'
+    msg.attach(MIMEText('You have missing Values in your SGE data and there is a CSV file attached with auto-filled information \n'
+                        + str(pd.DataFrame(summary))))
+
+    part = MIMEBase('application', "octet-stream")
+    part.set_payload(open("C:\\Users\\chenfa\\Documents\\blankCheking\\SortGroupEditorAutoFilled.csv", "rb").read())
+    encoders.encode_base64(part)
+    part.add_header('Content-Disposition', 'attachment; filename="C:\\Users\\chenfa\\Documents\\blankCheking\\SortGroupEditorAutoFilled.csv"')
+    msg.attach(part)
+
+
+
+    smtp = smtplib.SMTP('ballard.amazon.com',1587 )
+    if isTls:
+        smtp.starttls()
+    smtp.login(send_from,password)
+    for address in send_to:
+        smtp.sendmail(send_from, address, msg.as_string())
+    smtp.quit()
+    
+send_mail()
+
+
+
+
