@@ -17,8 +17,8 @@ import numpy as np
 
 
 #import csv file from file 
-datasetStatic= pd.read_csv("C:\\Users\\chenfa\\Documents\\blankCheking\\all-sort-groups.csv")
-datasetCompareOrigin = pd.read_csv("C:\\Users\\chenfa\\Documents\\blankCheking\\SortGroupEditor.csv")
+datasetStatic= pd.read_csv("C:\\Users\\\\all-sort-groups.csv")
+datasetCompareOrigin = pd.read_csv("C:\\\\SortGroupEditor.csv")
 #check the data
 datasetCompareOrigin.head(3)
 datasetStatic = datasetStatic.iloc[:,:2]
@@ -85,7 +85,7 @@ for i in column:
     elif i == 'Utilization for Departure':
         missingValueDF.loc[:,i] = missingValueDF[i].fillna('1')
 
-missingValueDF.to_csv('C:\\Users\\chenfa\\Documents\\blankCheking\\SortGroupEditorAutoFilled.csv', index = False)
+missingValueDF.to_csv('C:\\Users\\cSortGroupEditorAutoFilled.csv', index = False)
 
 #sending an email 
 import smtplib
@@ -121,19 +121,19 @@ def send_mail(isTls=True):
 
 #    send_to = get_destination()
     #Email List for who will receive the alert 
-    send_to = ['chenfa@amazon.com','jlaub@amazon.com', 'ats-scheduling@amazon.com', 'omotayot@amazon.com']
+    send_to = ['chen@gmailcom']
     msg = MIMEMultipart()
     msg['From'] = send_from
-    msg['To'] = 'chenfa@amazon.com , jlaub@amazon.com, omotayot@amazon.com'
+    msg['To'] = 'emails'
     msg['Date'] = formatdate(localtime = True)
     msg['Subject'] = 'SortGroupEditorMissingValueAlert'
     msg.attach(MIMEText('You have missing Values in your SGE data and there is a CSV file attached with auto-filled information \n'
                         + str(pd.DataFrame(summary))))
 
     part = MIMEBase('application', "octet-stream")
-    part.set_payload(open("C:\\Users\\chenfa\\Documents\\blankCheking\\SortGroupEditorAutoFilled.csv", "rb").read())
+    part.set_payload(open("C:\\SortGroupEditorAutoFilled.csv", "rb").read())
     encoders.encode_base64(part)
-    part.add_header('Content-Disposition', 'attachment; filename="C:\\Users\\chenfa\\Documents\\blankCheking\\SortGroupEditorAutoFilled.csv"')
+    part.add_header('Content-Disposition', 'attachment; filename="C:\\SortGroupEditorAutoFilled.csv"')
     msg.attach(part)
 
 
