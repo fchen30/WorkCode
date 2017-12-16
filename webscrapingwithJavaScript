@@ -13,8 +13,8 @@ cert = r"C:\Users\chenfa\Documents\YardLog\cacerts.pem"
 os.environ["REQUESTS_CA_BUNDLE"] = cert
 kerberos = HTTPKerberosAuth(mutual_authentication=OPTIONAL)
 
-#driver =webdriver.Edge(r'C:\Users\chenfa\Documents\webdriver\MicrosoftWebDriver')
-driver =webdriver.Chrome(r'C:\Users\chenfa\Documents\webdriver\chromedriver')
+#driver =webdriver.Edge(r'C:\MicrosoftWebDriver')
+driver =webdriver.Chrome(r'C:\U\chromedriver')
 #driver = webdriver.Firefox()
 url = 'https://ipc-bm.amazon.com/inbound/inbound/view_transpose?org=US&report_id='
 driver.get(url)
@@ -34,4 +34,4 @@ for body in table('tbody'):
     
 df = pd.read_html(str(table), flavor = "bs4")
 df = pd.DataFrame(df[0])
-df.to_csv(r'C:\Users\chenfa\Documents\YardLog\bg.csv', index = False )
+df.to_csv(r'C:\Users\bg.csv', index = False )
