@@ -1,0 +1,63 @@
+import requests
+import os
+from bs4 import BeautifulSoup
+from requests_kerberos import HTTPKerberosAuth, OPTIONAL
+import datetime
+import pandas as pd
+now = datetime.datetime.now()
+FCs = [
+#IXD
+'ABE8','AVP1','CLT2','CVG3','FTW1','LGB8','MDW2','ONT8',
+#Sort Traditional
+'ABE2','CAE1','CHA1','IND1','LEX1','MDW4','MGE1','ONT2',
+'ONT6','PHL1','PHL7','PHX6','RIC2','STL6',
+#Sort AR
+'BDL2','BFI1','BFI4','BFIX','BWI2','CMH1','DFW7','EWR4',
+'EWR9','HOU2','JAX2','MDW7','MKC6','MKE1','MSP1','OAK4',
+'SAT2','SMF1','TPA1',
+#Sort Supplemental
+'ATL7','PHX9',
+#Speciality
+'ABE3','BNA3','CVG1','IND4','MDT2','PHX3','SDF1','SDF4',
+'SDF6','SDF8',
+#Nonsort Traditional
+'ABE4','BNA2','BOS7','CHA2','CMH2','DEN2','DET1','GSP1',
+'IND2','IND5','JAX3','LAS6','LGB4','MDT1','MDW6','MDW9',
+'MGE3','MKC4','ONT9','PHL4','PHL5','PHL6','PHX5','PHX7',
+'RIC1','RNO4','SJC7','SNA4','STL4','TEB3','TEB6',
+#Nonsort AR
+'BFI3','DFW6','OAK3','SAT1','TPA2',
+#3PL
+'XUSB','XUSC','XUSD','XUSE','XUSF','XUSH','XUSJ','XUSK',
+'XUSM',
+#Special Handling
+'ATL8','AVP3','BFI7','FTW2','MDW8'
+]
+cert = r"C:\cacerts.pem"
+os.environ["REQUESTS_CA_BUNDLE"] = cert
+kerberos = HTTPKerberosAuth(mutual_authentication=OPTIONAL)
+#prius = open('prius_data2.txt','w')
+table = []
+for FC in FCs:
+	url = ''
+
+	session = requests.Session()
+	request = session.get(url, auth=kerberos).content.decode("latin-1")
+	soup = BeautifulSoup(request,"lxml")
+	s = soup.find('tfoot')
+
+	#headers = [header.text for header in s[2].find_all('th')]
+
+
+
+	rows = ([val.text for val in s.find_all('td')]) #.encode('utf8')
+	    #srows[i].append([row.find_all('td')[-1].contents[2]])
+	  
+
+	if rows[0] == 'Total':
+		rows[0] = FC
+		print(datetime.datetime.now() - now,rows)
+		table.append(rows)
+
+df = pd.DataFrame(table)
+df.to_csv('C:pruis.csv', index = False, header = None ) 
