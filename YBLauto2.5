@@ -61,7 +61,7 @@ FCs = [
 #Special Handling
 'ATL8','AVP3','BFI7','FTW2','MDW8'
 ]
-cert = r"C:\Users\chenfa\Documents\YardLog\cacerts.pem"
+cert = r"C:\Users\YardLog\cacerts.pem"
 os.environ["REQUESTS_CA_BUNDLE"] = cert
 kerberos = HTTPKerberosAuth(mutual_authentication=OPTIONAL)
 #prius = open('prius_data2.txt','w')
@@ -94,7 +94,7 @@ def prius(FCs):
 # prius(FCs)
 
 # WTP
-# cert = r"C:\Users\chenfa\Documents\YardLog\cacerts.pem"
+# cert = r"C:\Usersts\YardLog\cacerts.pem"
 # os.environ["REQUESTS_CA_BUNDLE"] = cert
 # kerberos_auth = HTTPKerberosAuth(mutual_authentication=OPTIONAL)
 
@@ -120,10 +120,10 @@ def wtp():
 # CU and BG
 
 
-url = [["bg", "https://ipc-bm.com/inbound/inbound/view_transpose?org=US&report_id="],
-       ["bgca", "https://ipc-bm.com/inbound/inbound/view_transpose?org=CA&report_id="],
-       ["cu", "https://capacity.com/sccp/101/storage_requirement_metric"],
-       ["cuca", "https://capacity.com/sccp/115/storage_requirement_metric"]]
+url = [["bg", "https://ipc-bm.com/inboun/view_transpose?org=US&report_id="],
+       ["bgca", "https://ipc-bm.com/inbound/view_transpose?org=CA&report_id="],
+       ["cu", "https://capacity.com/srage_requirement_metric"],
+       ["cuca", "https://capacity.comtorage_requirement_metric"]]
 
 
 def read(html):
@@ -233,7 +233,7 @@ def read_web(webbook):
 
         df = pd.read_html(str(table), flavor="bs4")
         df = pd.DataFrame(df[0])
-        df.to_csv('C:\\Users\\chenfa\\Documents\\YardLog\\' + url[0] + '.csv', index=False)
+        df.to_csv('C:\\Users\ocuments\\YardLog\\' + url[0] + '.csv', index=False)
 
     def read_cu(url):
         driver.get(url[1])
