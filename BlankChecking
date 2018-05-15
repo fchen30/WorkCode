@@ -138,7 +138,7 @@ def send_mail(isTls=True):
 
 
 
-    smtp = smtplib.SMTP('ballard.amazon.com',1587 )
+    smtp = smtplib.SMTP('ballard.amazon.com', )
     if isTls:
         smtp.starttls()
     smtp.login(send_from,password)
