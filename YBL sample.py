@@ -46,7 +46,7 @@ import tkinter
 
 
 #os.path.dirname(os.path.abspath('YBLauto3.2.py'))
-dir_path = 'c:\\users\\chenfa\\documents\\YardLog'
+dir_path = 
 
 url = [["bg", "https://ipc-bm.amazon.com/inbound/inbound/view_transpose?org=US&report_id="],
        ["bgca", "https://ipc-bm.amazon.com/inbound/inbound/view_transpose?org=CA&report_id="],
@@ -73,20 +73,7 @@ CA = ['YVR2','YVR3','YYZ1','YYZ2','YYZ3','YYZ4','YYZ6']
 
 #FCs = USFC 
 #Future use 
-USFCd = {'IXD':['ABE8','AVP1','CLT2','CVG3','FTW1','LGB8','MDW2','ONT8'],
-         'SortTraditional': ['ABE2','CAE1','CHA1','IND1','LEX1','MDW4','MGE1','ONT2','ONT6','PHL1','PHL7','PHX6','RIC2','STL6'],
-         'SortAR' : ['BDL2','BFI1','BFI4','BFIX','BOS1','BWI1','BWI2','BWI4','CMH1','DFW7',
-          'EWR4','EWR9','FTW6','FTW7','FTW8','HOU2','JAX2','LGA9','LGB3','MDW7','MKC6','MKE1',
-          'MSP1','OAK4','RNO3','SAT2','SMF1','TPA1'],
-         'SortQD' :['FTW3','FTW4','LGA7','LGA8','SNA6','SNA7','SNA8','SNA9','STL7'],
-         'SortSupplemental' : ['ATL7','AVP8','IND7','PCA1','PHX9','PIL1','PIN1','POH1','PPA1','PTX1','PWA1'],
-         'Specialty' : ['ABE3','BNA3','CVG1','IND4','MDT2','ORD1','PHX3','SDF1','SDF4','SDF6','SDF8','TEB7'],
-         'NonSortTraditional' : ['ABE4','BNA2','BOS7','CHA2','CMH2','CVG2','DEN2','DET1','GSP1','HOU3',
-               'IND2','IND5','JAX3','LAS6','LGB4','LGB6','MDT1','MDW6','MDW9','MGE3','MKC4',
-               'ONT9','PHL4','PHL5','PHL6','PHX5','PHX7','RIC1','RNO4','SJC7','SNA4','STL4','TEB3','TEB6'],
-         'NonSortAR' : ['BFI3','DFW6','OAK3','SAT1','TPA2'],
-         'ThirdPL': ['XUSB','XUSC','XUSD','XUSE','XUSF','XUSH','XUSJ','XUSK','XUSM'],
-         'SpecialHandling' : ['ATL8','AVP3','BFI7','FTW2','MDW8']}
+USFCd = {}
 
 USFC = USFCd['IXD']+USFCd['SortTraditional']+USFCd['SortAR']+USFCd['SortQD']+USFCd['SortSupplemental']+USFCd['Specialty']+USFCd['NonSortTraditional']+USFCd['NonSortAR']+USFCd['ThirdPL']+USFCd['SpecialHandling']
 
@@ -333,87 +320,7 @@ def inTridata():
     con=pyodbc.connect(r'DSN=InbTriData;UID=inbpri_ro;DESCRIPTION=Inbound Pri;SERVER={inbpri-export-db-ro.cijru1ctbrlc.us-east-1.rds.amazonaws.com};DATABASE=inbpri_us_export;PORT=8192;')
 #    cursor = con.cursor()
     
-    query = """SELECT WAREHOUSE_ID ,
-        CASE
-          WHEN WAREHOUSE_ID IN ('AVP1','CVG3','ONT8','MDW2','FTW1','ABE8','CLT2','LGB8')
-          THEN 'IXD'
-          WHEN WAREHOUSE_ID IN( 'ABE2','ATL9','AVP8','BFI1','BFI4','BNA1','BNA3','BOS1','BWI1','BWI2','BWI4','CAE1','CHA1', 'CHS1','CMH1','DAL6','DFW7','EWR4','EWR9','FTW3','FTW4','FTW6','FTW7','FTW8','IND1','IND3','IND7','LAX6','LEX1','LEX3','LGA7','LGA8','MDW4','MGE1','MIA6','MKE1','MSP1', 'OAK4','ONT2','ONT3','ONT6','ORD6','PCA2','PFL1','PGA1','PIN1','PHL1','PHL3', 'PHL7','PHL9','PHX3','PHX6','POH1','PPA1','PTX1','PWA1','RIC2','RNO1','SAT2','SNA6','SNA7','SNA8', 'SNA9','STL6','STL7','TPA1','TUL1','VUGG','LGB3' )
-          THEN 'Sortable'
-          WHEN WAREHOUSE_ID IN ('ABE4','AVP3','BFI3','BNA2','BOS7','CHA2','CMH2','CVG2','DFW6','FTW2','GSP1', 'IND2','IND5','LGA6','MDT1','MDW6','MKC4','OAK3','ONT9','PHL4','PHL5', 'PHL6','PHX1','PHX5','PHX7','RIC1','RNO4','SAT1','SJC7','SNA4','STL4', 'TPA2','VUAT','VUAV')
-          THEN 'NonSortable'
-          WHEN WAREHOUSE_ID IN ('ABE3','CVG1', 'IND4' ,'SDF1', 'SDF4' ,'SDF6' ,'SDF8')
-          THEN 'Softlines'
-          WHEN WAREHOUSE_ID IN ( 'ATL2','ATL8','BDL1','BFIX','CVG8','HOU3','IUSB','IUSD','IVSA','LGB1','LGB6','ORF1', 'PIJA','PITA','SAV1','VAVP','VCXA','XCHA','XUSA','XUSJ','XUSK','XUSL', 'XUSM' )
-          THEN '3PL'
-          ELSE 'Other'
-        END AS FC_TYPE,
-        CASE
-          WHEN WAREHOUSE_ID IN ( 'ABE2','ABE4','AVP3','AVP8','BOS1','BOS7','BWI1','BWI2','BWI4','EWR4','EWR9','LGA7','LGA8', 'MDT1','PHL1','PHL4','PHL5','PHL6','PHL7','PPA1','RIC1','RIC2' )
-          THEN 'Northeast'
-          WHEN WAREHOUSE_ID IN ( 'ATL7','ATL8','BNA2','BNA3','CAE1','CHA1','CHA2','GSP1','MGE1','TPA1','TPA2' )
-          THEN 'Southeast'
-          WHEN WAREHOUSE_ID IN ( 'CVG2','CMH1','CMH2','IND1','IND2','IND7','IND5','LEX1','MDW6','MKC4','MKE1', 'MSP1','ORD6','PIN1','POH1','STL4','STL6','STL7' )
-          THEN 'Midwest'
-          WHEN WAREHOUSE_ID IN ('DAL6','DFW6','DFW7','FTW3','FTW4','FTW7','FTW8','FTW6','PTX1','SAT1','SAT2' )
-          THEN 'Central'
-          WHEN WAREHOUSE_ID IN ( 'BFI1','BFI3','BFI4','BFIX','PWA1' )
-          THEN 'Northwest'
-          WHEN WAREHOUSE_ID IN( 'OAK3','OAK4','ONT2','ONT6','ONT9','RNO4','SJC7','SNA4','SNA6','SNA7','SNA8','SNA9','LGB3','LGB6','LGB8' )
-          THEN 'West'
-         WHEN WAREHOUSE_ID IN ( 'PHX3','PHX5','PHX6','PHX7','HOU3' )
-          THEN 'Southwest'
-          ELSE 'Other-Region'
-        END FC_REGION,
-        INBOUND_SHIP_APPOINTMENT_ID,
-        SUGGESTION_REQUESTED_AT,
-        STANDARD_CARRIER_ALPHA_CODE,
-        CASE
-          WHEN STANDARD_CARRIER_ALPHA_CODE IN ( 'USPS','UPSZ','UPSS','UPSN','RPSI','FEDX','FDEG','FDE','DHLC','UPSC', 'ATSIN','CNTL','EXP','FDCC','FDEB','FDEC','FDEN','FDFF','FEDX','FEDZ', 'FEFF','FEPL','FREZ','FXPG','FXSP','PURQ','RPSI','UPAC','UPND','UPSZ')
-          THEN 'SP'
-          ELSE 'TL/LTL'
-        END AS FREIGHT_TYPE,
-        APPOINTMENT_STATUS,
-        EARLIEST_ARRIVAL_DATE,
-        CARRIER_REQUESTED_DELIVERY_DATE,
-        APPOINTMENT_START,
-        TRAILER_ARRIVAL_DATE,
-        TRAILER_CHECKIN_DATE,
-        TRAILER_UNLOAD_DATE,
-        IS_AT_CARRIER_YARD,
-        MILK_RUN_ID,
-        APPT_ESTIMATED_QUANTITY,
-        APPT_UNITS_FROM_ASN,
-        APPT_UNITS_FROM_GUESS,
-        APPT_CARTONS_FROM_ASN,
-        SUM(ISD_CARTON_QUANTITY) AS ISD_CARTON_QUANTITY,
-        SUM(ISD_UNIT_QUANTITY)   AS ISD_UNIT_QUANTITY,
-        CASE
-          WHEN CARRIER_REQUESTED_DELIVERY_DATE IS NULL
-          THEN 'Y'
-          ELSE 'N'
-        END AS IS_CRDD_NULL,
-        CASE
-          WHEN APPOINTMENT_STATUS IN ('ARRIVED','CHECKIN_SCHEDULED','CHECKED_IN','ARRIVE_RESERVED')
-          THEN 'ONSITE_BACKLOG'
-          WHEN CARRIER_REQUESTED_DELIVERY_DATE <= SUGGESTION_REQUESTED_AT
-          AND APPOINTMENT_STATUS               IS NOT NULL
-          AND APPOINTMENT_STATUS NOT           IN ('ARRIVED','CHECKIN_SCHEDULED','CHECKED_IN' ,'UNLOADED','CLOSED','DELETED')
-          THEN 'OFFSITE_BACKLOG'
-         WHEN CARRIER_REQUESTED_DELIVERY_DATE IS NULL
-          THEN 'NOT_A_BACKLOG-CRDD_NULL'
-          WHEN CARRIER_REQUESTED_DELIVERY_DATE > SUGGESTION_REQUESTED_AT
-          THEN 'CRDD > SNAP_SHOT_DATETIME'
-          ELSE 'TBD-UNKNOWN'
-        END AS BACKLOG_TYPE,
-        CASE
-          WHEN STANDARD_CARRIER_ALPHA_CODE IN ('FBAT')
-          THEN 'Y'
-          ELSE 'N'
-    END AS IS_FBAT_APPOINTMENT
-    FROM inbpri_us_export.V_PRIORITIZED_APPOINTMENTS
-    where APPOINTMENT_STATUS IN ('ARRIVED','CHECKIN_SCHEDULED','CHECKED_IN','ARRIVE_RESERVED','ARRIVAL_SCHEDULED')
-    and APPT_ESTIMATED_QUANTITY > 0 
-    GROUP BY INBOUND_SHIP_APPOINTMENT_ID;"""
+    query = """"""
     
     #cursor.execute(query)
     #
@@ -1086,8 +993,8 @@ def send_mail(isTls=True):
 
 #
 def send_Alert(isTls=True):
-    send_from = "chenfa@amazon.com"
-    password = "IwgraduatedfASU!"
+    send_from = ""
+    password = ""
 
 #    send_to = get_destination()
     #Email List for who will receive the alert 
