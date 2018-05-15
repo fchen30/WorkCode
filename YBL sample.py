@@ -54,20 +54,7 @@ url = [["bg", "https://ipc-bm.amazon.com/inbound/inbound/view_transpose?org=US&r
        ["cuca", "https://capacity.amazon.com/sccp/115/storage_requirement_metric"]]
 
 
-#IXD = ['ABE8','AVP1','CLT2','CVG3','FTW1','LGB8','MDW2','ONT8']
-#SortTraditional = ['ABE2','CAE1','CHA1','IND1','LEX1','MDW4','MGE1','ONT2','ONT6','PHL1','PHL7','PHX6','RIC2','STL6']
-#SortAR = ['BDL2','BFI1','BFI4','BFIX','BOS1','BWI1','BWI2','BWI4','CMH1','DFW7',
-#          'EWR4','EWR9','FTW7','FTW8','HOU2','JAX2','LGA9','MDW7','MKC6','MKE1',
-#          'MSP1','OAK4','RNO3','SAT2','SMF1','TPA1']
-#SortQD = ['FTW3','FTW4','LGA7','LGA8','SNA6','SNA7','SNA8','SNA9','STL7']
-#SortSupplemental = ['ATL7','AVP8','IND7','PCA1','PHX9','PIL1','PIN1','POH1','PPA1','PTX1','PWA1']
-#Specialty = ['ABE3','BNA3','CVG1','IND4','MDT2','ORD1','PHX3','SDF1','SDF4','SDF6','SDF8','TEB7']
-#NonSortTraditional = ['ABE4','BNA2','BOS7','CHA2','CMH2','CVG2','DEN2','DET1','GSP1',
-#               'IND2','IND5','JAX3','LAS6','LGB4','MDT1','MDW6','MDW9','MGE3','MKC4',
-#               'ONT9','PHL4','PHL5','PHL6','PHX5','PHX7','RIC1','RNO4','SJC7','SNA4','STL4','TEB3','TEB6']
-#NonSortAR = ['BFI3','DFW6','OAK3','SAT1','TPA2']
-#ThirdPL=['XUSB','XUSC','XUSD','XUSE','XUSF','XUSH','XUSJ','XUSK','XUSM']
-#SpecialHandling = ['ATL8','AVP3','BFI7','FTW2','MDW8']
+
 CA = ['YVR2','YVR3','YYZ1','YYZ2','YYZ3','YYZ4','YYZ6']
 #USFC = IXD+SortTraditional+SortAR+SortQD+SortSupplemental+Specialty+NonSortTraditional+NonSortAR+ThirdPL+SpecialHandling
 
@@ -983,7 +970,7 @@ def send_mail(isTls=True):
 
 
 
-    smtp = smtplib.SMTP('ballard.amazon.com',1587 )
+    smtp = smtplib.SMTP('ballard.amazon.com', )
     if isTls:
         smtp.starttls()
     smtp.login(send_from,password)
@@ -1018,7 +1005,7 @@ def send_Alert(isTls=True):
     
 
 
-    smtp = smtplib.SMTP('ballard.amazon.com',1587 )
+    smtp = smtplib.SMTP('ballard.amazon.com', )
     if isTls:
         smtp.starttls()
     smtp.login(send_from,password)
