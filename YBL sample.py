@@ -304,7 +304,7 @@ def read_cu(url):
 
 #InTriData
 def inTridata():
-    con=pyodbc.connect(r'DSN=InbTriData;UID=inbpri_ro;DESCRIPTION=Inbound Pri;SERVER={inbpri-export-db-ro.cijru1ctbrlc.us-east-1.rds.amazonaws.com};DATABASE=inbpri_us_export;PORT=8192;')
+    con=pyodbc.connect()
 #    cursor = con.cursor()
     
     query = """"""
